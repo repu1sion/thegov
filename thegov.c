@@ -31,13 +31,14 @@ void show_current_gov(int coreidx)
 	f = fopen(gov_name, "r");
 	if (!f)
 	{
-		printf("can't find current governor. break.\n");
+		printf("<can't find current governor. cpufreq seems to be"
+			" disabled in kernel>\n");
 		exit(1);
 	}
 
 	if (fgets(line, sizeof(line), f) == NULL)
 	{
-		printf("can't read list of available governors. break.\n");
+		printf("<can't read list of available governors>\n");
 		exit(1);
 	}
 	fclose(f);
@@ -58,7 +59,7 @@ void set_current_gov(int coreidx, int govidx)
 	f = fopen(gov_name, "w");
 	if (!f)
 	{
-		printf("can't find current governor. break.\n");
+		printf("<can't find current governor>\n");
 		exit(1);
 	}
 	
@@ -71,7 +72,7 @@ int main()
 	FILE *f;
 	char line[256];
 	char *p_line;
-	int num_govs = 0;
+	int num_govs;
 	int num_cores;
 	int cnt = 0;
 	int i;
@@ -89,12 +90,12 @@ int main()
 	f = fopen(f_avail_govs, "r");
 	if (!f)
 	{
-		printf("can't find list of available governors. break.\n");
+		printf("<can't find list of available governors>\n");
 		exit(1);
 	}
 	if (fgets(line, sizeof(line), f) == NULL)
 	{
-		printf("can't read list of available governors. break.\n");
+		printf("<can't read list of available governors>\n");
 		exit(1);
 	}
 	fclose(f);
@@ -105,7 +106,8 @@ int main()
 	while ((avail_govs[cnt] = strtok(p_line, " ")) != NULL)
 	{
 		//printf("cnt: %d , word: %s\n", cnt, avail_govs[cnt]);
-		p_line = NULL; /* we need to pass string to strtok only first time, then pass NULL everytime */
+		/* pass string to strtok only first time, then pass NULL */
+		p_line = NULL;
 		cnt++;
 	}
 	num_govs = cnt;
@@ -128,7 +130,7 @@ int main()
 	scanf("%d", &idx);
 	if (idx < 0 || idx > num_govs)
 	{
-		printf("wrong value entered. exit\n");
+		printf("<wrong value entered. exit>\n");
 		exit(1);
 	}
 	else if (idx == 0)
